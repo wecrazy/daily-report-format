@@ -209,7 +209,7 @@ export function ReportForm({
 
           <div>
             <label className="mb-1 block text-xs font-semibold text-slate-600">
-              Details (use backslash-n, like item1\nitem2)
+              Details (use backslash-n, like item1\\nitem2)
             </label>
             <textarea
               rows={4}
