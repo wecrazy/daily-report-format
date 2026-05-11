@@ -2,7 +2,8 @@ import { sectionLabels, sectionOrder, type ReportState } from "@/lib/types";
 
 const expandDetailLines = (detail: string) =>
   detail
-    .split(/\\n|\r?\n/g)
+    .replace(/\\n/g, "\n")
+    .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
 

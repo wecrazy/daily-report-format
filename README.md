@@ -14,7 +14,7 @@ Report 05/05/2026
 
 - Dynamic sections: Tasks, Done, Doing, Pending, Priority
 - Add, remove, and reorder report items per section
-- Detail separator support using `\n` to produce bullet lines with `+`
+- Multiline detail support to produce bullet lines with `+`
 - Live generated preview exactly matching expected report style
 - One-click copy to clipboard and `.txt` download
 - Dashboard stats and chart for section distribution
