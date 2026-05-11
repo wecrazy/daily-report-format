@@ -7,6 +7,7 @@ import { sectionOrder, type ReportItem, type ReportSections, type SectionKey } f
 
 interface ReportStore {
   date: string;
+  lastSyncedDate: string;
   sections: ReportSections;
   setDate: (date: string) => void;
   addItem: (section: SectionKey, item: Omit<ReportItem, "id">) => void;
@@ -32,11 +33,21 @@ const makeId = () => {
 };
 
 const todayString = () => format(new Date(), "dd/MM/yyyy");
+const isValidDisplayDate = (value: string) => {
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
+    return false;
+  }
+
+  const [day, month, year] = value.split("/").map(Number);
+  const parsed = new Date(year, month - 1, day);
+  return parsed.getFullYear() === year && parsed.getMonth() === month - 1 && parsed.getDate() === day;
+};
 
 export const useReportStore = create<ReportStore>()(
   persist(
     (set) => ({
       date: todayString(),
+      lastSyncedDate: todayString(),
       sections: makeInitialSections(),
       setDate: (date) => set({ date }),
       addItem: (section, item) =>
@@ -88,6 +99,7 @@ export const useReportStore = create<ReportStore>()(
       resetAll: () =>
         set({
           date: todayString(),
+          lastSyncedDate: todayString(),
           sections: makeInitialSections(),
         }),
     }),
@@ -95,11 +107,27 @@ export const useReportStore = create<ReportStore>()(
       name: "daily-report-builder",
       partialize: (state) => ({
         date: state.date,
+        lastSyncedDate: state.lastSyncedDate,
         sections: sectionOrder.reduce((acc, key) => {
           acc[key] = state.sections[key];
           return acc;
         }, {} as ReportSections),
       }),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<ReportStore> | undefined;
+        const today = todayString();
+        const shouldSyncToday = !persisted?.lastSyncedDate || persisted.lastSyncedDate !== today;
+        const persistedDate = persisted?.date?.trim();
+        const safePersistedDate = persistedDate && isValidDisplayDate(persistedDate) ? persistedDate : undefined;
+
+        return {
+          ...currentState,
+          ...persisted,
+          date: shouldSyncToday ? today : (safePersistedDate ?? currentState.date),
+          lastSyncedDate: today,
+          sections: persisted?.sections ? { ...makeInitialSections(), ...persisted.sections } : currentState.sections,
+        };
+      },
     },
   ),
 );
