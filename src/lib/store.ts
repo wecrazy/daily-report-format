@@ -33,6 +33,15 @@ const makeId = () => {
 };
 
 const todayString = () => format(new Date(), "dd/MM/yyyy");
+const isValidDisplayDate = (value: string) => {
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
+    return false;
+  }
+
+  const [day, month, year] = value.split("/").map(Number);
+  const parsed = new Date(year, month - 1, day);
+  return parsed.getFullYear() === year && parsed.getMonth() === month - 1 && parsed.getDate() === day;
+};
 
 export const useReportStore = create<ReportStore>()(
   persist(
@@ -108,11 +117,13 @@ export const useReportStore = create<ReportStore>()(
         const persisted = persistedState as Partial<ReportStore> | undefined;
         const today = todayString();
         const shouldSyncToday = !persisted?.lastSyncedDate || persisted.lastSyncedDate !== today;
+        const persistedDate = persisted?.date?.trim();
+        const safePersistedDate = persistedDate && isValidDisplayDate(persistedDate) ? persistedDate : undefined;
 
         return {
           ...currentState,
           ...persisted,
-          date: shouldSyncToday ? today : (persisted?.date ?? currentState.date),
+          date: shouldSyncToday ? today : (safePersistedDate ?? currentState.date),
           lastSyncedDate: today,
           sections: persisted?.sections ? { ...makeInitialSections(), ...persisted.sections } : currentState.sections,
         };
