@@ -208,7 +208,9 @@ export function ReportForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-semibold text-slate-600">Details (use \n to separate bullets)</label>
+            <label className="mb-1 block text-xs font-semibold text-slate-600">
+              Details (use <code>\n</code> to separate bullets)
+            </label>
             <textarea
               rows={4}
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-sky-500 focus:ring"
@@ -324,7 +326,9 @@ export function ReportForm({
               </div>
 
               <div>
-                <label className="mb-1 block text-xs font-semibold text-slate-600">Details (use \n to separate bullets)</label>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">
+                  Details (use <code>\n</code> to separate bullets)
+                </label>
                 <textarea
                   rows={5}
                   className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-sky-500 focus:ring"
