@@ -66,7 +66,8 @@ const isoDateToDisplay = (isoDate: string) => {
 
 const parseDetailsInput = (input: string) =>
   input
-    .split(/\\n|\r?\n/g)
+    .replace(/\r?\n/g, " ")
+    .split("\\n")
     .map((line) => line.trim())
     .filter(Boolean);
 
@@ -209,7 +210,7 @@ export function ReportForm({
 
           <div>
             <label className="mb-1 block text-xs font-semibold text-slate-600">
-              Details (use <code>\n</code> to separate bullets)
+              Details (use <span aria-label="backslash n">"\n"</span> to separate bullets)
             </label>
             <textarea
               rows={4}
@@ -327,7 +328,7 @@ export function ReportForm({
 
               <div>
                 <label className="mb-1 block text-xs font-semibold text-slate-600">
-                  Details (use <code>\n</code> to separate bullets)
+                  Details (use <span aria-label="backslash n">"\n"</span> to separate bullets)
                 </label>
                 <textarea
                   rows={5}
