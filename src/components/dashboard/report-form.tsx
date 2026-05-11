@@ -66,8 +66,7 @@ const isoDateToDisplay = (isoDate: string) => {
 
 const parseDetailsInput = (input: string) =>
   input
-    .replace(/\\n/g, "\n")
-    .split("\n")
+    .split("\\n")
     .map((line) => line.trim())
     .filter(Boolean);
 
@@ -123,7 +122,7 @@ export function ReportForm({
     setEditing({ section, item });
     setEditProject(item.project);
     setEditTitle(item.title);
-    setEditDetails(item.details.join("\n"));
+    setEditDetails(item.details.join("\\n"));
   };
 
   const closeEditModal = () => {
@@ -209,11 +208,11 @@ export function ReportForm({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-semibold text-slate-600">Details (one line per bullet)</label>
+            <label className="mb-1 block text-xs font-semibold text-slate-600">Details (use \n to separate bullets)</label>
             <textarea
               rows={4}
               className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-sky-500 focus:ring"
-              placeholder="Get and read the S3 documentation\nSummarize upload route and payload"
+              placeholder="Get and read the S3 documentation\\nSummarize upload route and payload"
               {...register("details")}
             />
           </div>
