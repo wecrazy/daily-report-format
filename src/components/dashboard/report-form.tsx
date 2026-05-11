@@ -210,7 +210,7 @@ export function ReportForm({
 
           <div>
             <label className="mb-1 block text-xs font-semibold text-slate-600">
-              Details (use <span aria-label="backslash n">&quot;\n&quot;</span> to separate bullets)
+              Details (use <span aria-label="backslash n in quotes">&quot;\n&quot;</span> to separate bullets)
             </label>
             <textarea
               rows={4}
@@ -328,7 +328,7 @@ export function ReportForm({
 
               <div>
                 <label className="mb-1 block text-xs font-semibold text-slate-600">
-                  Details (use <span aria-label="backslash n">&quot;\n&quot;</span> to separate bullets)
+                  Details (use <span aria-label="backslash n in quotes">&quot;\n&quot;</span> to separate bullets)
                 </label>
                 <textarea
                   rows={5}
