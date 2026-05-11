@@ -7,6 +7,7 @@ import { sectionOrder, type ReportItem, type ReportSections, type SectionKey } f
 
 interface ReportStore {
   date: string;
+  lastSyncedDate: string;
   sections: ReportSections;
   setDate: (date: string) => void;
   addItem: (section: SectionKey, item: Omit<ReportItem, "id">) => void;
@@ -37,6 +38,7 @@ export const useReportStore = create<ReportStore>()(
   persist(
     (set) => ({
       date: todayString(),
+      lastSyncedDate: todayString(),
       sections: makeInitialSections(),
       setDate: (date) => set({ date }),
       addItem: (section, item) =>
@@ -88,6 +90,7 @@ export const useReportStore = create<ReportStore>()(
       resetAll: () =>
         set({
           date: todayString(),
+          lastSyncedDate: todayString(),
           sections: makeInitialSections(),
         }),
     }),
@@ -95,11 +98,25 @@ export const useReportStore = create<ReportStore>()(
       name: "daily-report-builder",
       partialize: (state) => ({
         date: state.date,
+        lastSyncedDate: state.lastSyncedDate,
         sections: sectionOrder.reduce((acc, key) => {
           acc[key] = state.sections[key];
           return acc;
         }, {} as ReportSections),
       }),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<ReportStore> | undefined;
+        const today = todayString();
+        const shouldSyncToday = !persisted?.lastSyncedDate || persisted.lastSyncedDate !== today;
+
+        return {
+          ...currentState,
+          ...persisted,
+          date: shouldSyncToday ? today : (persisted?.date ?? currentState.date),
+          lastSyncedDate: today,
+          sections: persisted?.sections ? { ...makeInitialSections(), ...persisted.sections } : currentState.sections,
+        };
+      },
     },
   ),
 );
