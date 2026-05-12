@@ -33,27 +33,12 @@ export const formatReport = (report: ReportState): string => {
       return;
     }
 
-    projectKeys.forEach((project) => {
-      const projectItems = groupedByProject[project];
-
-      if (projectItems.length === 1) {
-        const [single] = projectItems;
-        lines.push(`   - [${project}] ${single.title.trim()}`);
-        single.details.forEach((detail) => {
-          expandDetailLines(detail).forEach((line) => {
-            lines.push(`     + ${line}`);
-          });
-        });
-        return;
-      }
-
-      lines.push(`   - [${project}]`);
-      projectItems.forEach((projectItem) => {
-        lines.push(`     + ${projectItem.title.trim()}`);
-        projectItem.details.forEach((detail) => {
-          expandDetailLines(detail).forEach((line) => {
-            lines.push(`       - ${line}`);
-          });
+    items.forEach((item) => {
+      const project = item.project.trim();
+      lines.push(`   - [${project}] ${item.title.trim()}`);
+      item.details.forEach((detail) => {
+        expandDetailLines(detail).forEach((line) => {
+          lines.push(`     + ${line}`);
         });
       });
     });
